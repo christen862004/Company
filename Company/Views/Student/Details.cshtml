@@ -1,0 +1,14 @@
+﻿<!--Razor Synatx to determnt generic type of inheritance-->
+@model Student
+
+
+<!--Student-->
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<!--not want Unboxing-->
+@Model.Id
+@Model.Name
+

@@ -1,1 +1,50 @@
-﻿<h1>Welcome From My First View</h1>
+﻿<h1>Welcome From My First View ---- </h1>
+
+
+<!-- HTML : Hiber Text Markup Language-->
+
+<style>
+    /* write CSS Language not HTML*/
+    h1{
+        background-color:azure;
+        color:brown;
+    }
+</style>
+
+<script>
+    //write Javascript not html
+    console.log("hiiiiiii");
+</script>
+
+<!--Razor Synatx ==> Razor Engin-->
+<!--C#  =Render=>  HTML-->
+<!--Block of Code-->
+@{
+    int x = 10;//10
+    int y = x + 10;//20
+    <div>hiiiiiiiiiiiiiiiiiiiii </div>
+}
+<!--Inline Statment-->
+<h3>x= @x</h3>
+<h3>y= @y</h3>
+<h3>@(x+y)</h3> 
+<!---Condition statment--->
+@if (x > y){
+    <h2>X Greater Than Y</h2>
+}//end of if case andd C# Block
+else
+{
+    <h2>X = @x Less Than Y = @y</h2>
+}
+
+
+<!--Looping Statment (for ,foreach ,while ,do while)....-->
+<ul><!--unorder List-->
+@for (int i = 1; i < 11; i++)
+{
+    <li>@i</li><!--List Item-->
+}
+</ul>
+
+
+

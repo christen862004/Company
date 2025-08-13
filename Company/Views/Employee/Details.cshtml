@@ -1,0 +1,45 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Details";//set not get  ?????
+}
+
+<h1>Details</h1>
+
+<h2 style="background-color:@ViewData["Clr"]">@Model.Name</h2>
+<h2 style="background-color:@ViewBag.Clr">@Model.Name</h2>
+<hr />
+
+
+<h3>Message: @ViewData["Msg"]</h3>
+<h3>Message: @ViewBag.Msg</h3>
+<hr />
+<h3>Temp : @(int.Parse(ViewData["Temp"].ToString())-10)</h3>
+<h3>Temp : @(ViewBag.Temp-10)</h3>
+<hr />
+
+<select class="form form-control">
+    @foreach (var item in (List<string>)ViewData["Brch"])
+    {
+        <option>@item</option>
+    }
+</select>
+<select class="form form-control">
+    @foreach (var item in ViewBag.Brch)
+    {
+        <option>@item</option>
+    }
+</select>
+<hr />
+<h3>
+@ViewData["Age"]<br />
+@ViewBag.Age
+</h3>
+<!--DisAdv. Of Viewdata
+1) Key "Magic String"
+2) Type Casting (UnBoxing)
+
+Ddis adv ViewBag
+1) magic  string
+2) errors come runtime as exception
+-->
+

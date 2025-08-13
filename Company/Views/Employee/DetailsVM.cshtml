@@ -1,0 +1,21 @@
+﻿@* @using Company.ViewModels *@
+@model EmpNameWithClrBrachListMsgTempViewModel
+
+@* @model Company.ViewModels.EmpNameWithClrBrachListMsgTempViewModel *@
+
+@{
+    ViewData["Title"] = "DetailsVM";
+}
+
+<h1>DetailsVM</h1>
+<h2 style="color:@Model.Color">@Model.EmpFullName</h2>
+<h2>@Model.Msg</h2>
+<h3>@(Model.Temp-20)</h3>
+
+<select class="form form-control">
+    @foreach (var item in Model.Branches)
+    {
+        <option>@item</option>
+    }
+</select>
+

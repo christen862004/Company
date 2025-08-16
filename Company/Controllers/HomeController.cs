@@ -18,6 +18,18 @@ namespace Company.Controllers
             3) Can't be Overload only in one case 
          
          */
+        //Home/Method1
+        [HttpGet]
+        public IActionResult MEthod1()
+        {
+            return Ok("Method1 Get");
+        }
+        [HttpPost]
+        public IActionResult MEthod1(int age)
+        {
+            return Ok("Method1 post");
+        }
+
 
         private readonly ILogger<HomeController> _logger;
 

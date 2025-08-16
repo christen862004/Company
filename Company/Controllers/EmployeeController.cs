@@ -10,7 +10,59 @@ namespace Company.Controllers
         {
             
         }
+        public IActionResult Index()
+        {
+            List<Employee> list = context.Employees.ToList();
+            return View("Index", list);
+        }
+
         CompanyContext context = new CompanyContext();
+        #region Edit
+        //Employee/Edit/id
+        public IActionResult Edit(int id)
+        {
+            //Send View Model To View
+            //Collect
+            Employee empModel=context.Employees.FirstOrDefault(e=>e.Id==id);
+            List<Department> DeptList = context.Departments.ToList();
+            //declare VM
+            EmpWithDeptListViewModel EmpVM = new();
+            //Mapping s=>D
+            EmpVM.Id = empModel.Id;
+            EmpVM.Name = empModel.Name;
+            EmpVM.DepartmentId = empModel.DepartmentId;
+            EmpVM.ImageUrl = empModel.ImageUrl;
+            EmpVM.Salary = empModel.Salary;
+            EmpVM.Email = empModel.Email;
+            EmpVM.DeptList = DeptList;
+            //Send ViewModel
+            return View("Edit", EmpVM);
+        }
+
+        [HttpPost]
+        public IActionResult SaveEdit(EmpWithDeptListViewModel EmpFromReq)
+        {
+            if(EmpFromReq.Name!=null && EmpFromReq.Salary>7000) {
+                //get old ref
+                Employee EmpFRomDb =
+                    context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+                //change (set)
+                EmpFRomDb.Name = EmpFromReq.Name;
+                EmpFRomDb.DepartmentId = EmpFromReq.DepartmentId;
+                EmpFRomDb.ImageUrl = EmpFromReq.ImageUrl;
+                EmpFRomDb.Salary = EmpFromReq.Salary;
+                EmpFRomDb.Email = EmpFromReq.Email;
+                //save Change
+                context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            EmpFromReq.DeptList = context.Departments.ToList();
+            return View("Edit", EmpFromReq);
+        }
+        #endregion
+
+        #region     DEtails
+
         //Employee/DEtails/1
         //Employee/DEtails?id=1
         public IActionResult Details(int id)
@@ -66,6 +118,6 @@ namespace Company.Controllers
             //view with name DetailsVM insided Employee Folder
             //Model with type EmpNameWithClrBrachListMsgTempViewModel
         }
-
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Company.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Company.ViewModels
@@ -7,6 +8,8 @@ namespace Company.ViewModels
     {
         public int Id { get; set; }
 
+        [Display(Name="Employee Name")]
+       // [DataType(DataType.Password)]//determine input type
         public string Name { get; set; }
 
         public string? Email { get; set; }

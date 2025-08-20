@@ -1,6 +1,7 @@
 ﻿using Company.Models;
 using Company.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 
 namespace Company.Controllers
 {
@@ -17,6 +18,32 @@ namespace Company.Controllers
         }
 
         CompanyContext context = new CompanyContext();
+        #region New
+        public IActionResult New()
+        {
+            ViewBag.DeptList = context.Departments.ToList();
+            return View("New");
+        }
+
+        [HttpPost]//handel only post method request
+        [ValidateAntiForgeryToken]//handel local request only (check requ have validd toke or not)
+
+        public IActionResult SaveNew(Department dept,Employee EmpFromReq,string Name,EmpWithDeptListViewModel EmpVM)
+        {
+           
+            //IEnumerable<Department> dept = context.Employees.ToList();
+            if (EmpFromReq.Name != null)
+            {
+                context.Employees.Add(EmpFromReq);
+                context.SaveChanges();
+                return RedirectToAction("Index", "Employee");
+            }
+            ViewBag.DeptList = context.Departments.ToList();
+            return View("New", EmpFromReq);
+        }
+        #endregion
+
+
         #region Edit
         //Employee/Edit/id
         public IActionResult Edit(int id)
@@ -63,9 +90,9 @@ namespace Company.Controllers
 
         #region     DEtails
 
-        //Employee/DEtails/1
-        //Employee/DEtails?id=1
-        public IActionResult Details(int id)
+        //Employee/DEtails/1?name=ahmed
+        //Employee/DEtails?id=1&name=ahmed
+        public IActionResult Details(int id,string name)
         {
             //Extra info 
             string message = "Hello";

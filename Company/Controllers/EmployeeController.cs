@@ -18,6 +18,15 @@ namespace Company.Controllers
         }
 
         CompanyContext context = new CompanyContext();
+        //Employee/CheckSalary?Salary=1000&Name=Ahmed
+        public IActionResult CheckSalary(int Salary,string Name)//NAme =null
+        {
+            if (Salary % 5 == 0)
+                return Json(true);
+            else
+                return Json(false);
+        }
+
         #region New
         public IActionResult New()
         {
@@ -27,16 +36,20 @@ namespace Company.Controllers
 
         [HttpPost]//handel only post method request
         [ValidateAntiForgeryToken]//handel local request only (check requ have validd toke or not)
-
-        public IActionResult SaveNew(Department dept,Employee EmpFromReq,string Name,EmpWithDeptListViewModel EmpVM)
+        public IActionResult SaveNew(Employee EmpFromReq)//Department dept,Employee EmpFromReq,string Name,EmpWithDeptListViewModel EmpVM)
         {
-           
-            //IEnumerable<Department> dept = context.Employees.ToList();
-            if (EmpFromReq.Name != null)
+            if(ModelState.IsValid==true)
             {
-                context.Employees.Add(EmpFromReq);
-                context.SaveChanges();
-                return RedirectToAction("Index", "Employee");
+                try
+                {
+                    context.Employees.Add(EmpFromReq);
+                    context.SaveChanges();
+                    return RedirectToAction("Index", "Employee");
+                }catch(Exception ex)//as validation error not excpeiotn
+                {
+                    //ModelState.AddModelError("DepartmentId", "Select DEpartment");
+                    ModelState.AddModelError("Key1", ex.InnerException.Message);//div
+                }
             }
             ViewBag.DeptList = context.Departments.ToList();
             return View("New", EmpFromReq);

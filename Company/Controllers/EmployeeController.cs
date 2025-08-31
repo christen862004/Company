@@ -1,4 +1,5 @@
 ﻿using Company.Models;
+using Company.Reposiotry;
 using Company.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
@@ -7,17 +8,21 @@ namespace Company.Controllers
 {
     public class EmployeeController : Controller
     {
-        public EmployeeController()
+        //DIP ,ISP ,IOC
+        IEmployeeRepository employeeRepository;
+        IDeptartmentRepository departmentRepository;
+        public EmployeeController(IEmployeeRepository emprep, IDeptartmentRepository deptrepo)
         {
-            
+            employeeRepository = emprep;
+            departmentRepository = deptrepo;
         }
         public IActionResult Index()
         {
-            List<Employee> list = context.Employees.ToList();
+            List<Employee> list =employeeRepository.GetAll();
             return View("Index", list);
         }
 
-        CompanyContext context = new CompanyContext();
+       // CompanyContext context = new CompanyContext();
         //Employee/CheckSalary?Salary=1000&Name=Ahmed
         public IActionResult CheckSalary(int Salary,string Name)//NAme =null
         {
@@ -30,7 +35,7 @@ namespace Company.Controllers
         #region New
         public IActionResult New()
         {
-            ViewBag.DeptList = context.Departments.ToList();
+            ViewBag.DeptList = departmentRepository.GetAll();
             return View("New");
         }
 
@@ -42,8 +47,8 @@ namespace Company.Controllers
             {
                 try
                 {
-                    context.Employees.Add(EmpFromReq);
-                    context.SaveChanges();
+                    employeeRepository.Add(EmpFromReq);
+                    employeeRepository.Save();
                     return RedirectToAction("Index", "Employee");
                 }catch(Exception ex)//as validation error not excpeiotn
                 {
@@ -51,7 +56,7 @@ namespace Company.Controllers
                     ModelState.AddModelError("Key1", ex.InnerException.Message);//div
                 }
             }
-            ViewBag.DeptList = context.Departments.ToList();
+            ViewBag.DeptList = departmentRepository.GetAll();
             return View("New", EmpFromReq);
         }
         #endregion
@@ -63,8 +68,8 @@ namespace Company.Controllers
         {
             //Send View Model To View
             //Collect
-            Employee empModel=context.Employees.FirstOrDefault(e=>e.Id==id);
-            List<Department> DeptList = context.Departments.ToList();
+            Employee empModel=employeeRepository.GetByID(id);
+            List<Department> DeptList = departmentRepository.GetAll();
             //declare VM
             EmpWithDeptListViewModel EmpVM = new();
             //Mapping s=>D
@@ -84,19 +89,29 @@ namespace Company.Controllers
         {
             if(EmpFromReq.Name!=null && EmpFromReq.Salary>7000) {
                 //get old ref
+                //Employee EmpFRomDb = employeeRepository.GetByID(EmpFromReq.Id);
+                //EmpFRomDb.Name = EmpFromReq.Name;
+                //EmpFRomDb.DepartmentId = EmpFromReq.DepartmentId;
+                //EmpFRomDb.ImageUrl = EmpFromReq.ImageUrl;
+                //EmpFRomDb.Salary = EmpFromReq.Salary;
+                //EmpFRomDb.Email = EmpFromReq.Email;
+                ////save Change
+                //employeeRepository.Save();
                 Employee EmpFRomDb =
-                    context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+                   new Employee();
                 //change (set)
+                EmpFRomDb.Id = EmpFromReq.Id;
                 EmpFRomDb.Name = EmpFromReq.Name;
                 EmpFRomDb.DepartmentId = EmpFromReq.DepartmentId;
                 EmpFRomDb.ImageUrl = EmpFromReq.ImageUrl;
                 EmpFRomDb.Salary = EmpFromReq.Salary;
                 EmpFRomDb.Email = EmpFromReq.Email;
+                employeeRepository.Edit(EmpFRomDb);
                 //save Change
-                context.SaveChanges();
+                employeeRepository.Save();
                 return RedirectToAction("Index");
             }
-            EmpFromReq.DeptList = context.Departments.ToList();
+            EmpFromReq.DeptList = departmentRepository.GetAll();
             return View("Edit", EmpFromReq);
         }
         #endregion
@@ -124,7 +139,7 @@ namespace Company.Controllers
             ViewBag.Clr = "red";// override on old  ViewData["Clr"] = "red";
 
             //----------------------------
-            Employee empModel= context.Employees.FirstOrDefault(e=>e.Id == id);
+            Employee empModel= employeeRepository.GetByID(id);
             return View("Details",empModel);
             //view with name Details insided Employee Folder
             //Model with type Employee
@@ -139,7 +154,7 @@ namespace Company.Controllers
             string color = "green";
             List<string> brch = new List<string>()
             { "Alex","Assiut","Cairo","Mansoura"};
-            Employee empModel = context.Employees.FirstOrDefault(e => e.Id == id);
+            Employee empModel = employeeRepository.GetByID(id);
 
             //---------------Fill / Set data inside ViewModel
             //create obj from VIewModel

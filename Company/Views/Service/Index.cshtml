@@ -1,0 +1,12 @@
+﻿@using Company.Reposiotry
+@inject IFakeRepo  fakerepo
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<h2>Repo Id From View</h2>
+<h3>@fakerepo.Id</h3>
+<hr />
+<h2>Repo Id FRom Controller</h2>
+<h3>@ViewBag.Id</h3>

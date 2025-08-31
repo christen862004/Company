@@ -1,22 +1,27 @@
 ﻿using Company.Models;
+using Company.Reposiotry;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.Controllers
 {
     public class DepartmentController : Controller
     {
-        CompanyContext context = new CompanyContext();
-
+        // CompanyContext context = new CompanyContext();
+        IDeptartmentRepository departmentRepository;
+        public DepartmentController(IDeptartmentRepository deptrep)
+        {
+            departmentRepository =  deptrep;
+        }
         public IActionResult Index()
         {
-            List<Department> DEptListModel= context.Departments.ToList();
+            List<Department> DEptListModel= departmentRepository.GetAll();
             return View("Index", DEptListModel);
             //Model ==> Department
         }
 
         public IActionResult Details(int id)
         {
-            Department dept= context.Departments.FirstOrDefault(d => d.Id == id);
+            Department dept= departmentRepository.GetByID(id);
             return View("Details", dept);
         }
 
@@ -34,8 +39,8 @@ namespace Company.Controllers
         //    {
                 if (dept.Name != null)//Server Side Validadtion
                 {
-                    context.Departments.Add(dept);
-                    context.SaveChanges();
+                    departmentRepository.Add(dept);
+                    departmentRepository.Save();
                     //Dry call action
                     return RedirectToAction("Index");
 

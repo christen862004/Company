@@ -8,12 +8,14 @@ namespace Company.Models
         //logic based on db query
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
+
             string? UserEmail = value.ToString();
 
             Employee EmpFromRequest=validationContext.ObjectInstance as Employee;
 
 
-            CompanyContext context = new CompanyContext();
+            CompanyContext context =
+                validationContext.GetRequiredService<CompanyContext>();//new CompanyContext();
             Employee? EmpFromDataBase= context.Employees
                 .FirstOrDefault(e=>e.Email == UserEmail && e.DepartmentId== EmpFromRequest.DepartmentId);
             if (EmpFromDataBase == null)

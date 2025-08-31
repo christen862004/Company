@@ -6,12 +6,16 @@ namespace Company.Models
     {
         public DbSet<Employee>  Employees { get; set; }
         public DbSet<Department>  Departments { get; set; }
-
-        public CompanyContext():base()
-        {
+        
+        //public CompanyContext():base()
+        //{
                 
-        }
+        //}
 
+        public CompanyContext(DbContextOptions<CompanyContext> options) : base(options)
+        {
+
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

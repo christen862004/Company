@@ -1,3 +1,7 @@
+using Company.Models;
+using Company.Reposiotry;
+using Microsoft.EntityFrameworkCore;
+
 namespace Company
 {
     public class Program
@@ -7,7 +11,20 @@ namespace Company
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.//Sessikon8
+            //framowrik service
+            //1) service define and already register
+            //2) services defianed but need to regster <---
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<CompanyContext>(optionBuilder => {
+                optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
+            });//register Option ,CompanyContext
+
+            //3) Cusotm service
+
+            //register serice in Container
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IDeptartmentRepository, DepartmentRepository>();
+           // builder.Services.AddScoped<IFakeRepo, FakeRepo>();
 
             var app = builder.Build();
 

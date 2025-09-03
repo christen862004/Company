@@ -1,3 +1,4 @@
+using Company.Filtters;
 using Company.Models;
 using Company.Reposiotry;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,13 @@ namespace Company
             //framowrik service
             //1) service define and already register
             //2) services defianed but need to regster <---
+            //builder.Services.AddControllersWithViews(option=>
+            //option.Filters.Add(new HandelErrorAttribute())//global filter
+            //);
             builder.Services.AddControllersWithViews();
+
+
+
             builder.Services.AddDbContext<CompanyContext>(optionBuilder => {
                 optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });//register Option ,CompanyContext
@@ -59,13 +66,37 @@ namespace Company
             }
             app.UseStaticFiles(); //understant static filed that found in wwwroot
 
-            app.UseRouting();//mapping
+            app.UseRouting();//mapping (scurity | Secrtary)
 
-            app.UseAuthorization();
+            app.UseAuthorization();//
 
-            app.MapControllerRoute(
+            //app.MapControllerRoute("Rout1", "r1/{age:int:range(20,60)}/{name?}"//required parameter | Route Parameter Constraint
+            //    , new { controller="Route",action="Method1"});
+            //r1/12
+            //r1/22/ahmed
+
+
+
+
+
+            //app.MapControllerRoute("Rout1", "r1"//required parameter | Route Parameter Constraint
+            //   , new { controller = "Route", action = "Method1" });
+
+            //app.MapControllerRoute("Route2", "r2", new { controller="Route",action="Method2"});
+
+
+            //app.MapControllerRoute("Rout1",
+            //    "{controller=Route}/{action=Method1}"//required parameter | Route Parameter Constraint
+            //   );
+
+            //r/Method1
+            //r/Method2
+            //r        Metho1
+            
+
+            app.MapControllerRoute(//DEfine Route | execute
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Employee}/{action=Index}/{id?}");
 
             #endregion
 
